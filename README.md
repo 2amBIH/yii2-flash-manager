@@ -1,1 +1,1 @@
-# yii2-flash-message
+# yii2-flash-manager

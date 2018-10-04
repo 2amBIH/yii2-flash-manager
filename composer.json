@@ -1,0 +1,44 @@
+{
+    "name": "dvamigos/yii2-flash-manager",
+    "description": "Flash manager for managing session flashes for Yii2",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "borisaeric",
+            "email": "borisa123@hotmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "dvamigos\\Yii2\\FlashManager\\": "src"
+        }
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "2.0.*",
+        "yiisoft/yii2-bootstrap": "~2.0.0",
+        "npm-asset/izitoast": "1.4.*",
+        "bower-asset/noty": "3.1.*",
+        "bower-asset/notifyjs": "0.4.*",
+        "bower-asset/jquery-growl": "1.3.*",
+        "bower-asset/toastr": "2.1.*"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "config": {
+        "process-timeout": 1800,
+        "fxp-asset":{
+            "enabled" : false,
+            "installer-paths": {
+                "npm-asset-library": "vendor/npm",
+                "bower-asset-library": "vendor/bower"
+            }
+        }
+    }
+}
