@@ -8,12 +8,13 @@
 namespace dvamigos\Yii2\FlashManager\NotifyJs;
 
 use dvamigos\Yii2\FlashManager\Flash;
+use dvamigos\Yii2\FlashManager\FlashBaseWidget;
 use yii\helpers\Json;
 use yii\web\View;
 use Yii;
 
 /**
- * NotifyJs widget renders a message from flash component. All flash messages are displayed
+ * NotifyJsFlash widget renders a message from flash component. All flash messages are displayed
  * in the sequence they were assigned using methods from flash component.
  * You can set message as following:
  *
@@ -25,48 +26,20 @@ use Yii;
  * ```
  *
  */
-class NotifyJsFlash extends \yii\base\Widget
+class NotifyJsFlash extends FlashBaseWidget
 {
-    public $clientOptions = [];
-    public $category = Flash::DEFAULT_CATEGORY;
-
-    const FLASH_SUCCESS = 'success';
-    const FLASH_ERROR = 'error';
-    const FLASH_INFO = 'info';
-    const FLASH_WARNING = 'warning';
-
-    public function run()
-    {
-        $this->registerAssets();
-        foreach (Yii::$app->flash->getAllByCategory($this->category) as $type => $message) {
-            if (in_array($type, array_keys(self::getAlertTypes()))) {
-                $message = is_array($message) ? current($message) : $message;
-                $type = self::getAlertTypes()[$type];
-                $this->view->registerJs("$.notify('{$message}', '{$type}');", View::POS_READY, md5($message));
-            }
-        }
-
-        parent::run();
+    protected function setJs($type, $message) {
+        $this->js .= "$.notify('{$message}', '{$type}');";
     }
 
-    /**
-     * Registers required assets and the executing code block with the view
-     */
-    protected function registerAssets()
+    protected function setClientOptionsJs($clientOptionsJson)
+    {
+        $this->clientOptionsJs = "$.notify.defaults({$clientOptionsJson});";
+    }
+
+    protected function registerAsset()
     {
         NotifyJsAsset::register($this->getView());
-
-        $js = null;
-
-        if (isset($this->clientOptions)) {
-            $clientOptionsJson = Json::encode($this->clientOptions);
-            $js = "$.notify.defaults({$clientOptionsJson});";
-        }
-
-        if (isset($js)) {
-            $this->view->registerJs($js, View::POS_READY, md5($js));
-        }
-
     }
 
     public static function getAlertTypes()
@@ -75,7 +48,7 @@ class NotifyJsFlash extends \yii\base\Widget
             static::FLASH_ERROR   => 'error',
             static::FLASH_SUCCESS => 'success',
             static::FLASH_INFO    => 'info',
-            static::FLASH_WARNING => 'warning'
+            static::FLASH_WARNING => 'warn'
         ];
     }
 }
