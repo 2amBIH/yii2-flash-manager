@@ -18,15 +18,6 @@ class NotyAsset extends AssetBundle
 
     public $css = [
         'noty.css',
-        'themes/mint.css',
-        'themes/bootstrap-v3.css',
-        'themes/bootstrap-v4.css',
-        'themes/light.css',
-        'themes/metroui.css',
-        'themes/nest.css',
-        'themes/relax.css',
-        'themes/semanticui.css',
-        'themes/sunset.css',
     ];
 
     public $js = [

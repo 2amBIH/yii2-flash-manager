@@ -7,32 +7,35 @@
 
 namespace dvamigos\Yii2\FlashManager\JqueryGrowl;
 
-use dvamigos\Yii2\FlashManager\Flash;
-use yii\web\View;
-use Yii;
+use dvamigos\Yii2\FlashManager\FlashBaseWidget;
 
-class JqueryGrowlFlash extends \yii\base\Widget
+/**
+ * JqueryGrowl widget renders a message from flash component. All flash messages are displayed
+ * in the sequence they were assigned using methods from flash component.
+ * You can set message as following:
+ *
+ * ```php
+ * Yii::$app->flash->success('This is the message');
+ * Yii::$app->flash->error('This is the message');
+ * Yii::$app->flash->info('This is the message');
+ * Yii::$app->flash->warning('This is the message');
+ * ```
+ *
+ */
+class JqueryGrowlFlash extends FlashBaseWidget
 {
-    public $category = Flash::DEFAULT_CATEGORY;
+    protected function setJs($type, $message) {
+        $this->js .= "$.growl.{$type}({title: '{$type}', message: '{$message}'});";
+    }
 
-    const FLASH_SUCCESS = 'success';
-    const FLASH_ERROR = 'error';
-    const FLASH_INFO = 'info';
-    const FLASH_WARNING = 'warning';
+    protected function setClientOptionsJs($clientOptionsJson)
+    {
+        $this->clientOptionsJs = null;
+    }
 
-    public function run()
+    protected function registerAsset()
     {
         JqueryGrowlAsset::register($this->getView());
-
-        foreach (Yii::$app->flash->getAllByCategory($this->category) as $type => $message) {
-            if (in_array($type, array_keys(self::getAlertTypes()))) {
-                $message = is_array($message) ? current($message) : $message;
-                $type = self::getAlertTypes()[$type];
-                $this->view->registerJs("$.growl.{$type}({title: '{$type}', message: '{$message}'});", View::POS_READY, md5($message));
-            }
-        }
-
-        parent::run();
     }
 
     public static function getAlertTypes()
